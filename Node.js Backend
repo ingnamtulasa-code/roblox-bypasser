@@ -1,0 +1,23 @@
+const express = require('express');
+const bodyParser = require('body-parser');
+const app = express();
+const port = 3000;
+
+app.use(bodyParser.json());
+
+app.post('/bypass', (req, res) => {
+  const { cookie, password, birthdate, email } = req.body;
+
+  // Simulate API call to Roblox
+  // In real use, you'd make a request to Roblox API or use a script
+
+  if (cookie && password && birthdate) {
+    res.json({ success: true, message: "Bypass successful!" });
+  } else {
+    res.json({ success: false, message: "Invalid input" });
+  }
+});
+
+app.listen(port, () => {
+  console.log(`Server running at http://localhost:${port}`);
+});

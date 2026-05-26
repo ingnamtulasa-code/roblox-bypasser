@@ -1,8 +1,0 @@
-{
-  "functions": {
-    "api/bypass.js": {
-      "runtime": "nodejs18.x"
-    }
-  },
-  "rewrites": [{ "source": "/(.*)", "destination": "/public/index.html" }]
-}

